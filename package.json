@@ -1,0 +1,26 @@
+{
+  "name": "nasa-nodejs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "server": "npm run watch --prefix server",
+    "client": "npm start --prefix client",
+    "watch": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Meng-Yangkov/nasa-nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Meng-Yangkov/nasa-nodejs/issues"
+  },
+  "homepage": "https://github.com/Meng-Yangkov/nasa-nodejs#readme",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
