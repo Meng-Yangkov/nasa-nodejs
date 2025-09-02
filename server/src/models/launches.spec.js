@@ -3,7 +3,7 @@ const app = require('../app')
 
 describe('Test GET /launches', () => {
   test('It should work with 200 response code', async () => {
-    const response = await request(app)
+    const response = await request(app) 
       .get('/launches')
       .expect('Content-Type', /json/)
       .expect(200);
@@ -24,6 +24,12 @@ describe('Test POST /launches', () => {
     rocket : 'F-16 Fighting falcon',
     target: 'New York City',
   };  
+  const launchWithInvalidDate = {
+    mission: 'Being Software Engineer',
+    rocket : 'F-16 Fighting falcon',
+    target: 'New York City',
+    launchDate: ('thymaya')
+  }; 
   test('It should work with 201 response code', async () => {
     const response = await request(app)
       .post('/launches')
@@ -38,6 +44,24 @@ describe('Test POST /launches', () => {
     expect(response.body).toMatchObject(LaunchDataWithoutDate);
   });
 
-  test('It should catch missing the required properties', () => {});
-  test('It should catch invalid date', () => {})
-})
+  test('It should catch missing the required properties', async () => {
+    const response = await request(app)
+      .post('/launches')
+      .send(LaunchDataWithoutDate)
+      .expect('Content-Type', /json/)
+      .expect(400);
+    expect(response.body).toStrictEqual({
+      error: 'Mission required launch property!'
+    })
+  });
+  test('It should catch invalid date',async () => {
+    const response = await request(app)
+      .post('/launches')
+      .send(launchWithInvalidDate)
+      .expect('Content-Type', /json/)
+      .expect(400);
+    expect(response.body).toStrictEqual({
+      error: 'Invalid launch date'
+    });
+  });
+});
