@@ -1,3 +1,7 @@
+const { describe, test } = require('node:test');
+//for checking two values are the same or not
+const { deepStrictEqual, strictEqual } = require('node:assert');
+
 const request = require('supertest'); //-> for testing http
 const app = require('../app')
 
@@ -7,7 +11,7 @@ describe('Test GET /launches', () => {
       .get('/launches')
       .expect('Content-Type', /json/)
       .expect(200);
-    expect(response.statusCode).toBe(200);
+    strictEqual(response.statusCode, 200);
   });
 });
 
@@ -40,8 +44,14 @@ describe('Test POST /launches', () => {
     const requestDate = new Date(completeLaunchData.launchDate).valueOf();
     const responseDate = new Date(response.body.launchDate).valueOf();
 
-    expect(responseDate).toBe(requestDate);
-    expect(response.body).toMatchObject(LaunchDataWithoutDate);
+    deepStrictEqual(responseDate, requestDate);
+
+    const { mission, rocket, target} = response.body;
+    deepStrictEqual({
+      mission,
+      rocket,
+      target,
+    }, LaunchDataWithoutDate); 
   });
 
   test('It should catch missing the required properties', async () => {
@@ -50,9 +60,9 @@ describe('Test POST /launches', () => {
       .send(LaunchDataWithoutDate)
       .expect('Content-Type', /json/)
       .expect(400);
-    expect(response.body).toStrictEqual({
+    deepStrictEqual(response.body,{
       error: 'Mission required launch property!'
-    })
+    });
   });
   test('It should catch invalid date',async () => {
     const response = await request(app)
@@ -60,7 +70,7 @@ describe('Test POST /launches', () => {
       .send(launchWithInvalidDate)
       .expect('Content-Type', /json/)
       .expect(400);
-    expect(response.body).toStrictEqual({
+    deepStrictEqual(response.body,{
       error: 'Invalid launch date'
     });
   });
